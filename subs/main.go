@@ -16,6 +16,12 @@ type Order struct {
 	Status     string
 }
 
+const (
+	streamName     = "TEST"
+	streamSubjects = "TEST.*"
+	subjectName    = "TEST.subject1"
+)
+
 func main() {
 	// Connect to NATS
 	nc, _ := nats.Connect("localhost:4222")
@@ -24,7 +30,7 @@ func main() {
 		log.Fatal(err)
 	}
 	// Create durable consumer monitor
-	js.Subscribe("ORDERS.*", func(msg *nats.Msg) {
+	js.Subscribe(subjectName, func(msg *nats.Msg) {
 		var order model.Order
 		err := json.Unmarshal(msg.Data, &order)
 		if err != nil {
