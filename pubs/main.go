@@ -16,9 +16,9 @@ type Order struct {
 }
 
 const (
-	streamName     = "ORDERS"
-	streamSubjects = "ORDERS.*"
-	subjectName    = "ORDERS.created"
+	streamName     = "TEST"
+	streamSubjects = "TEST.*"
+	subjectName    = "TEST.subject1"
 )
 
 func main() {
@@ -61,7 +61,7 @@ func createOrder(js nats.JetStreamContext) error {
 		if err != nil {
 			return err
 		}
-		log.Printf("Order with OrderID:%d has been published\n", i)
+		log.Printf("Order with OrderID:%d has been published to subject:%s \n", i, subjectName)
 	}
 	return nil
 }
@@ -76,7 +76,8 @@ func createStream(js nats.JetStreamContext) error {
 	if stream == nil {
 		log.Printf("creating stream %q and subjects %q", streamName, streamSubjects)
 		_, err = js.AddStream(&nats.StreamConfig{
-			Name: streamName,
+			Name:     streamName,
+			Subjects: []string{streamSubjects},
 		})
 		if err != nil {
 			return err
